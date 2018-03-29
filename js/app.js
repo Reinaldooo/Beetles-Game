@@ -91,24 +91,19 @@ class Gem {
 }
 
 //Enemy Section
-
-const enemySpeed = () => Math.random()*6+1;
+const enemySpeed = () => Math.random() * 6 + 1;
 const enemyColor = () => {
-    let avl = ['images/enemy-bug.png','images/enemy-bug-2.png','images/enemy-bug-3.png']
-    return avl[Math.floor(Math.random()*3)];
+    let avl = ['images/enemy-bug.png', 'images/enemy-bug-2.png', 'images/enemy-bug-3.png']
+    return avl[Math.floor(Math.random() * 3)];
 }
 
 class Enemy {
     constructor() {
-        const enemySpeed = () => Math.random() * 6 + 1;
-        const enemyColor = () => {
-            let avl = ['images/enemy-bug.png', 'images/enemy-bug-2.png', 'images/enemy-bug-3.png']
-            return avl[Math.floor(Math.random() * 3)];
-        }
         this.sprite = enemyColor();
         this.speed = enemySpeed();
         this.x = -150;
     }
+
     update(dt) {
         if (this.x < 501) {
             this.x += dt + this.speed
@@ -117,7 +112,6 @@ class Enemy {
         }
     }
 
-    // Draw the enemy on the screen, required method for game
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
