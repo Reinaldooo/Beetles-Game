@@ -6,6 +6,16 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <h2>Select your character and level</h2>
+    <div>
+        <img src="images/char-boy-button.png" onclick="charSelection(1)" value="easy"> 
+        <img src="images/char-pink-girl-button.png" onclick="charSelection(2)" value="easy"> 
+    </div>
+    <div>
+        <button onclick="level('easy')">Easy</button>
+        <button onclick="level('medium')">Medium</button>
+        <button onclick="level('hard')">Hard</button>
+    </div>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>

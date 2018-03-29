@@ -1,10 +1,46 @@
-// Enemies our player must avoid
-const Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+let char = undefined,
+    charWinner = 'images/char-boy-deal.png',
+    i = 0,
+    enemiesCount = [],
+    allEnemies = [],
+    score = 0;
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+const createEnemies = () => {
+    allEnemies = [];
+    enemiesCount.forEach((e) => {
+        let enemy = new Enemy();
+        enemy.y = e;
+        enemy.speed = Math.random()*8+1;
+        allEnemies.push(enemy)    
+    })
+}
+
+const level = (e) => {
+    if(e === "easy") {
+        enemiesCount = [52,134,216];
+        createEnemies()
+    } else if(e === "medium") {
+        enemiesCount = [52,134,216,52,134,216];
+        createEnemies()
+    } else {
+        enemiesCount = [52,134,216,52,134,216,52,134,216];
+        createEnemies()
+    }
+}
+
+const charSelection = (c) => {
+    if(c === 1) {
+        player.sprite = 'images/char-boy.png';
+        char = 'images/char-boy.png';
+        charWinner = 'images/char-boy-deal.png';
+    } else {
+        player.sprite = 'images/char-pink-girl.png';
+        char = 'images/char-pink-girl.png';
+        charWinner = 'images/char-pink-girl-deal.png';
+    }
+}
+
+const Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.x = -150;
 };
@@ -21,88 +57,75 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-
-var Player = function() {
-    this.sprite = 'images/char-boy.png';
+const Player = function() {
+    this.sprite = char;
     this.x = 200;
     this.y = 380;
 };
 
 Player.prototype.update = function(dt) {
-    if(player.x === enemy1.x && player.y === enemy1.y ){
-        console.log('ha')
-    }
 };
 
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    char != undefined && ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 Player.prototype.handleInput = function (e) {
     if (e === "down") {
-        this.y += 82
+        if (this.y < 379 && this.y > 51) {
+            this.y += 82;
+        }
     } else if (e === "up") {
         if (this.y === 52) {
-            this.y = 380;
-            this.sprite = 'images/char-boy-deal.png';
-        } else {
             this.y -= 82;
-            console.log(e);
+            this.sprite = charWinner;
+            score++;
+            setTimeout(() => {
+                this.y = 380;
+                this.x = 200;
+            }, 1500);
+        } else if (this.y === 298) {
+            this.y -= 82;
+            this.sprite = char;
+        } else if (this.y > 51) {
+            this.y -= 82;
         }
     } else if (e === "left") {
-        this.x -= 101;
-        console.log(e);
+        if (this.x > -2) {
+            this.x -= 101;
+        }
     } else if (e === "right") {
-        this.x += 101;
-        console.log(e);
+        if (this.x < 402) {
+            this.x += 101;
+        }
+    } else if (e === "plus") {
+        let y = [52,134,216];
+        let enemy = new Enemy();
+        enemy.y = y[i];
+        enemy.speed = Math.random()*8 + 2;
+        allEnemies.push(enemy);
+        if(i === 2){ 
+            i = 0 
+        } else {
+            i++
+        };
     }
 };
 
 
-var player = new Player();
-var enemy1 = new Enemy();
-enemy1.y = 52;
-enemy1.speed = 2;
-var enemy2 = new Enemy();
-enemy2.y = 134;
-enemy2.speed = 5;
-var enemy3 = new Enemy();
-enemy3.y = 216;
-enemy3.speed = 8;
-var enemy4 = new Enemy();
-enemy4.y = 134;
-enemy4.speed = 2;
-enemy4.x = -300;
-var enemy5 = new Enemy();
-enemy5.y = 216;
-enemy5.speed = 3;
-enemy5.x = -300;
-
-
-var allEnemies =[enemy1, enemy2, enemy3, enemy4, enemy5]
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-
-
-
+let player = new Player();
 
 document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
+    const allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        107: 'plus',
+        187: 'plus'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
