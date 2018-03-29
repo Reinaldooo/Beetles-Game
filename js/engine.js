@@ -92,6 +92,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+        gem.update();
         player.update();
     }
 
@@ -151,7 +152,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
+        gem.render();
         player.render();
     }
 
@@ -171,6 +172,7 @@ var Engine = (function(global) {
         'images/stone-block.png',
         'images/water-block.png',
         'images/grass-block.png',
+        'images/Gem-Green.png',
         'images/enemy-bug.png',
         'images/enemy-bug-2.png',
         'images/enemy-bug-3.png',

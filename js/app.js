@@ -5,6 +5,8 @@ let char = undefined,
     allEnemies = [],
     enemyX = [],
     enemyY = [],
+    gemXs = [-2,99,200,301,402],
+    gemYs = [52,134,216],
     score = 0;
 
 const createEnemies = () => {
@@ -55,7 +57,38 @@ const reset = () => {
     document.getElementById("char").style.display = "block";
     document.getElementById("char").className = "visible";
     document.getElementById("score").innerHTML = score;
+    gem.x = gemRanX();
+    gem.y = gemRanY();
 }
+
+//Gem Section
+
+const gemRanX = () => gemXs[Math.floor(Math.random()*5)]
+const gemRanY = () => gemYs[Math.floor(Math.random()*3)]
+
+const Gem = function() {
+    this.sprite = 'images/Gem-Green.png';
+    this.x = gemRanX();
+    this.y = gemRanY();
+};
+
+Gem.prototype.render = function() {
+    this.x != undefined && ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Gem.prototype.update = function () {
+    if (player.x === gem.x && player.y === gem.y ) {
+            score++;
+            document.getElementById("score").innerHTML = score;
+            this.x = undefined;
+            setTimeout(() => {
+                this.x = gemRanX();
+                this.y = gemRanY();
+            }, 3000);
+    }
+};
+
+//Enemy Section
 
 const enemySpeed = () => Math.random()*6+1;
 const enemyColor = () => {
@@ -84,6 +117,8 @@ Enemy.prototype.render = function() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//Player Section
+
 const Player = function() {
     this.sprite = char;
     this.x = 200;
@@ -99,6 +134,8 @@ Player.prototype.update = function() {
             e.y === player.y && e.x > player.x && e.x < player.x +70
         ) {
             //Set the original coordinates and puts on the looser char
+            score--;
+            document.getElementById("score").innerHTML = score;
             this.sprite = charLooser;
             this.x = 200;
             this.y = 380;
@@ -134,17 +171,21 @@ Player.prototype.handleInput = function (e) {
     } else if (e === "left") {
         if (this.x > -2) {
             this.x -= 101;
+            console.log(player.x)
         }
     } else if (e === "right") {
         if (this.x < 402) {
             this.x += 101;
+            console.log(player.x)
         }
     } 
 };
 
-
+//Objs init
 let player = new Player();
+let gem = new Gem();
 
+//Event Listener
 document.addEventListener('keyup', function(e) {
     const allowedKeys = {
         37: 'left',
@@ -154,6 +195,5 @@ document.addEventListener('keyup', function(e) {
         107: 'plus',
         187: 'plus'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
