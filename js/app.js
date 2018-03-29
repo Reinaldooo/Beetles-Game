@@ -63,21 +63,22 @@ const reset = () => {
 
 //Gem Section
 
-const gemRanX = () => gemXs[Math.floor(Math.random()*5)]
-const gemRanY = () => gemYs[Math.floor(Math.random()*3)]
+const gemRanX = () => gemXs[Math.floor(Math.random() * 5)]
+const gemRanY = () => gemYs[Math.floor(Math.random() * 3)]
 
-const Gem = function() {
-    this.sprite = 'images/Gem-Green.png';
-    this.x = gemRanX();
-    this.y = gemRanY();
-};
+class Gem {
+    constructor() {
+        this.sprite = 'images/Gem-Green.png';
+        this.x = gemRanX();
+        this.y = gemRanY();
+    }
 
-Gem.prototype.render = function() {
-    this.x != undefined && ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+    render() {
+        this.x != undefined && ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    };
 
-Gem.prototype.update = function () {
-    if (player.x === gem.x && player.y === gem.y ) {
+    update() {
+        if (player.x === gem.x && player.y === gem.y) {
             score++;
             document.getElementById("score").innerHTML = score;
             this.x = undefined;
@@ -85,8 +86,9 @@ Gem.prototype.update = function () {
                 this.x = gemRanX();
                 this.y = gemRanY();
             }, 3000);
+        }
     }
-};
+}
 
 //Enemy Section
 
@@ -96,90 +98,96 @@ const enemyColor = () => {
     return avl[Math.floor(Math.random()*3)];
 }
 
-const Enemy = function() {
-    this.sprite = enemyColor();
-    this.speed = enemySpeed();
-    this.x = -150;
-};
-
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    if(this.x < 501) {
-        this.x += dt+this.speed
-    } else {
-        this.x = -150
+class Enemy {
+    constructor() {
+        const enemySpeed = () => Math.random() * 6 + 1;
+        const enemyColor = () => {
+            let avl = ['images/enemy-bug.png', 'images/enemy-bug-2.png', 'images/enemy-bug-3.png']
+            return avl[Math.floor(Math.random() * 3)];
+        }
+        this.sprite = enemyColor();
+        this.speed = enemySpeed();
+        this.x = -150;
     }
-};
+    update(dt) {
+        if (this.x < 501) {
+            this.x += dt + this.speed
+        } else {
+            this.x = -150
+        }
+    }
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
+    // Draw the enemy on the screen, required method for game
+    render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+    }
+}
 
 //Player Section
 
-const Player = function() {
-    this.sprite = char;
-    this.x = 200;
-    this.y = 380;
-};
+class Player {
+    constructor() {
+        this.sprite = char;
+        this.x = 200;
+        this.y = 380;
+    }
 
-Player.prototype.update = function() {    
-    char != undefined && 
-    allEnemies.forEach((e) => {
-        if( //Enemys and player Ys are prefixed numbers.
-            e.y === player.y && e.x < player.x && e.x > player.x -70
-            ||
-            e.y === player.y && e.x > player.x && e.x < player.x +70
-        ) {
-            //Set the original coordinates and puts on the looser char
-            score--;
-            document.getElementById("score").innerHTML = score;
-            this.sprite = charLooser;
-            this.x = 200;
-            this.y = 380;
-        }
-    });
-};
+    update() {
+        char != undefined &&
+            allEnemies.forEach((e) => {
+                if ( //Enemys and player Ys are prefixed numbers.
+                    e.y === player.y && e.x < player.x && e.x > player.x - 70 ||
+                    e.y === player.y && e.x > player.x && e.x < player.x + 70
+                ) {
+                    //Set the original coordinates and puts on the looser char
+                    if (score > 0) {
+                        score--;
+                        document.getElementById("score").innerHTML = score;
+                    };
+                    this.sprite = charLooser;
+                    this.x = 200;
+                    this.y = 380;
+                }
+            });
+    };
 
-Player.prototype.render = function() {
-    char != undefined && ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+    render() {
+        char != undefined && ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    };
 
-Player.prototype.handleInput = function (e) {
-    if (e === "down") {
-        if (this.y < 379 && this.y > 51) {
-            this.y += 82;
+    handleInput(e) {
+        if (e === "down") {
+            if (this.y < 379 && this.y > 51) {
+                this.y += 82;
+            }
+        } else if (e === "up" && allEnemies.length > 0) {
+            if (this.y === 52) {
+                this.y -= 82;
+                this.sprite = charWinner;
+                score++;
+                document.getElementById("score").innerHTML = score;
+                setTimeout(() => {
+                    this.y = 380;
+                    this.x = 200;
+                }, 1000);
+            } else if (this.y === 380) {
+                this.y -= 82;
+                this.sprite = char;
+            } else if (this.y > 51) {
+                this.y -= 82;
+            }
+        } else if (e === "left") {
+            if (this.x > -2) {
+                this.x -= 101;
+            }
+        } else if (e === "right") {
+            if (this.x < 402) {
+                this.x += 101;
+            }
         }
-    } else if (e === "up" && allEnemies.length > 0) {
-        if (this.y === 52) {
-            this.y -= 82;
-            this.sprite = charWinner;
-            score++;
-            document.getElementById("score").innerHTML = score;
-            setTimeout(() => {
-                this.y = 380;
-                this.x = 200;
-            }, 1000);
-        } else if (this.y === 380) {
-            this.y -= 82;
-            this.sprite = char;
-        } else if (this.y > 51) {
-            this.y -= 82;
-        }
-    } else if (e === "left") {
-        if (this.x > -2) {
-            this.x -= 101;
-            console.log(player.x)
-        }
-    } else if (e === "right") {
-        if (this.x < 402) {
-            this.x += 101;
-            console.log(player.x)
-        }
-    } 
-};
+    }
+}
+
 
 //Objs init
 let player = new Player();
