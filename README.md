@@ -5,7 +5,7 @@
 This is a fun arcade game built using HTML, CSS and JavaScript
 #### This game was built using ES6 Classes and Object-oriented JavaScript
 
-[Demo GIF](/images/Demo.gif)
+![Demo GIF](/images/Demo.gif)
 
 *To load it in your computer:*
 
