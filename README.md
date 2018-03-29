@@ -13,8 +13,8 @@ This is a fun arcade game built using HTML, CSS and JavaScript
 * Choose your ``character`` and a ``level`` depending on your skills
 * ``easy`` will give you three enemies, ``medium`` gives you six beetles, and ``hard`` nine of them
 * Your goal is to get safely to the water. Use the arrow keys in your keyboard to control the character
-* Each time you get in the water or get an Gem, you get one score point
-* If you touch a beetle, your score will lower one point and your position will reset
+* Each time you get in the water or land in a Gem, you get one score point
+* If you touch a beetle, your score will lower and your position will reset
 * Happy gaming
 
 ___
