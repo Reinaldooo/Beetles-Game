@@ -1,7 +1,6 @@
 let char = undefined,
     charWinner = undefined,
     charLooser = undefined,
-    i = 0,
     enemiesCount = [],
     allEnemies = [],
     enemyX = [],
@@ -94,13 +93,12 @@ const Player = function() {
 Player.prototype.update = function() {    
     char != undefined && 
     allEnemies.forEach((e) => {
-        if( //O ys dos inimigos e do player são pré-fixados.
-            //Confere se estão no mesmo eixo y e se estão dentro da margem no eixo x
+        if( //Enemys and player Ys are prefixed numbers.
             e.y === player.y && e.x < player.x && e.x > player.x -70
             ||
             e.y === player.y && e.x > player.x && e.x < player.x +70
         ) {
-            //Seta as coordenadas originais e inclui o desenho pperdedor
+            //Set the original coordinates and puts on the looser char
             this.sprite = charLooser;
             this.x = 200;
             this.y = 380;
@@ -141,18 +139,7 @@ Player.prototype.handleInput = function (e) {
         if (this.x < 402) {
             this.x += 101;
         }
-    } else if (e === "plus") {
-        let y = [52,134,216];
-        let enemy = new Enemy();
-        enemy.y = y[i];
-        enemy.speed = Math.random()*8 + 2;
-        allEnemies.push(enemy);
-        if(i === 2){ 
-            i = 0 
-        } else {
-            i++
-        };
-    }
+    } 
 };
 
 
