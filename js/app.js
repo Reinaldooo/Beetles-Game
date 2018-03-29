@@ -1,8 +1,11 @@
 let char = undefined,
-    charWinner = 'images/char-boy-deal.png',
+    charWinner = undefined,
+    charLooser = undefined,
     i = 0,
     enemiesCount = [],
     allEnemies = [],
+    enemyX = [],
+    enemyY = [],
     score = 0;
 
 const createEnemies = () => {
@@ -10,7 +13,6 @@ const createEnemies = () => {
     enemiesCount.forEach((e) => {
         let enemy = new Enemy();
         enemy.y = e;
-        enemy.speed = Math.random()*8+1;
         allEnemies.push(enemy)    
     })
 }
@@ -28,20 +30,43 @@ const level = (e) => {
     }
 }
 
-const charSelection = (c) => {
+const charSelection = (c) => {    
+    document.getElementById("char").className = "invisible";
+    setTimeout(() => {
+        document.getElementById("char").style.display = "none";
+    }, 500);
     if(c === 1) {
         player.sprite = 'images/char-boy.png';
         char = 'images/char-boy.png';
         charWinner = 'images/char-boy-deal.png';
+        charLooser = 'images/char-boy-loo.png';
     } else {
         player.sprite = 'images/char-pink-girl.png';
         char = 'images/char-pink-girl.png';
         charWinner = 'images/char-pink-girl-deal.png';
+        charLooser = 'images/char-pink-girl-loo.png';
     }
 }
 
+const reset = () => {
+    allEnemies = [];
+    char = undefined;
+    charWinner = undefined;
+    score = 0;
+    document.getElementById("char").style.display = "block";
+    document.getElementById("char").className = "visible";
+    document.getElementById("score").innerHTML = score;
+}
+
+const enemySpeed = () => Math.random()*6+1;
+const enemyColor = () => {
+    let avl = ['images/enemy-bug.png','images/enemy-bug-2.png','images/enemy-bug-3.png']
+    return avl[Math.floor(Math.random()*3)];
+}
+
 const Enemy = function() {
-    this.sprite = 'images/enemy-bug.png';
+    this.sprite = enemyColor();
+    this.speed = enemySpeed();
     this.x = -150;
 };
 
@@ -66,7 +91,21 @@ const Player = function() {
     this.y = 380;
 };
 
-Player.prototype.update = function(dt) {
+Player.prototype.update = function() {    
+    char != undefined && 
+    allEnemies.forEach((e) => {
+        if( //O ys dos inimigos e do player são pré-fixados.
+            //Confere se estão no mesmo eixo y e se estão dentro da margem no eixo x
+            e.y === player.y && e.x < player.x && e.x > player.x -70
+            ||
+            e.y === player.y && e.x > player.x && e.x < player.x +70
+        ) {
+            //Seta as coordenadas originais e inclui o desenho pperdedor
+            this.sprite = charLooser;
+            this.x = 200;
+            this.y = 380;
+        }
+    });
 };
 
 Player.prototype.render = function() {
@@ -78,16 +117,17 @@ Player.prototype.handleInput = function (e) {
         if (this.y < 379 && this.y > 51) {
             this.y += 82;
         }
-    } else if (e === "up") {
+    } else if (e === "up" && allEnemies.length > 0) {
         if (this.y === 52) {
             this.y -= 82;
             this.sprite = charWinner;
             score++;
+            document.getElementById("score").innerHTML = score;
             setTimeout(() => {
                 this.y = 380;
                 this.x = 200;
-            }, 1500);
-        } else if (this.y === 298) {
+            }, 1000);
+        } else if (this.y === 380) {
             this.y -= 82;
             this.sprite = char;
         } else if (this.y > 51) {
