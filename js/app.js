@@ -7,6 +7,7 @@ let char = undefined,
     enemyY = [],
     gemXs = [-2,99,200,301,402],
     gemYs = [52,134,216],
+    won = false,
     score = 0;
 
 const createEnemies = () => {
@@ -32,10 +33,6 @@ const level = (e) => {
 }
 
 const charSelection = (c) => {    
-    document.getElementById("char").className = "invisible";
-    setTimeout(() => {
-        document.getElementById("char").style.display = "none";
-    }, 500);
     if(c === 1) {
         player.sprite = 'images/char-boy.png';
         char = 'images/char-boy.png';
@@ -59,6 +56,7 @@ const reset = () => {
     document.getElementById("score").innerHTML = score;
     gem.x = gemRanX();
     gem.y = gemRanY();
+    won = false
 }
 
 //Gem Section
@@ -105,8 +103,10 @@ class Enemy {
     }
 
     update(dt) {
-        if (this.x < 501) {
+        if (this.x < 501 && !won) {
             this.x += dt + this.speed
+        } else if(won) {
+            this.x = -2
         } else {
             this.x = -150
         }
@@ -159,11 +159,13 @@ class Player {
             if (this.y === 52) {
                 this.y -= 82;
                 this.sprite = charWinner;
+                won = true;
                 score++;
                 document.getElementById("score").innerHTML = score;
                 setTimeout(() => {
                     this.y = 380;
                     this.x = 200;
+                    won = false;
                 }, 1000);
             } else if (this.y === 380) {
                 this.y -= 82;
