@@ -130,7 +130,8 @@ class Player {
         char != undefined &&
             allEnemies.forEach((e) => {
                 if ( //Enemys and player Ys are prefixed numbers.
-                    e.y === player.y && e.x < player.x && e.x > player.x - 70 ||
+                    e.y === player.y && e.x < player.x && e.x > player.x - 70
+                    ||
                     e.y === player.y && e.x > player.x && e.x < player.x + 70
                 ) {
                     //Set the original coordinates and puts on the looser char
@@ -193,9 +194,7 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down',
-        107: 'plus',
-        187: 'plus'
+        40: 'down'
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
