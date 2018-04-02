@@ -16,6 +16,7 @@ button {
     margin-top: 1em;
     border: none;
     color: white;
+    font-weight: bold;
     background-color: #1976D2
 }
 
@@ -25,11 +26,12 @@ button {
     cursor: pointer;
     margin-top: 1em;
     border: none;
-    color: white;
-    background-color: #64B5F6
+    color: #1976D2;
+    background-color: white;
+    font-weight: bold;
 }
 
-button:hover {
+button:hover, button:active {
     opacity: .7
 }
 
@@ -44,11 +46,6 @@ img:hover {
 .visible {
     opacity: 1;
     transition: all 1s
-}
-
-.invisible {
-    opacity: 0;
-    transition: all .5s
 }
 
 .score {

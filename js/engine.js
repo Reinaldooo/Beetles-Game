@@ -89,11 +89,11 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        gem.update();
+        gem.update(player);
         allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
+            enemy.update(dt, player);
         });
-        player.update();
+        player.update(allEnemies);
     }
 
     /* This function initially draws the "game level", it will then call
@@ -152,7 +152,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-        gem.render();
+        gem.render(player);
         player.render();
     }
 
