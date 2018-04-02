@@ -54,25 +54,26 @@ const reset = () => {
     document.getElementById("char").style.display = "block";
     document.getElementById("char").className = "visible";
     document.getElementById("score").innerHTML = score;
-    gem.x = gemRanX();
-    gem.y = gemRanY();
+    gem.x = gem.gemRanX();
+    gem.y = gem.gemRanY();
     won = false
 }
 
 //Gem Section
 
-const gemRanX = () => gemXs[Math.floor(Math.random() * 5)]
-const gemRanY = () => gemYs[Math.floor(Math.random() * 3)]
 
 class Gem {
     constructor() {
         this.sprite = 'images/Gem-Green.png';
-        this.x = gemRanX();
-        this.y = gemRanY();
+        this.x = this.gemRanX();
+        this.y = this.gemRanY();
     }
+    
+    gemRanX() { return gemXs[Math.floor(Math.random() * 5)] }
+    gemRanY() { return gemYs[Math.floor(Math.random() * 3)] }
 
     render() {
-        (char != undefined && this.x != undefined) && ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        (char !== undefined && this.x !== undefined) && ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     };
 
     update() {
@@ -81,25 +82,26 @@ class Gem {
             document.getElementById("score").innerHTML = score;
             this.x = undefined;
             setTimeout(() => {
-                this.x = gemRanX();
-                this.y = gemRanY();
+                this.x = this.gemRanX();
+                this.y = this.gemRanY();
             }, 3000);
         }
     }
 }
 
 //Enemy Section
-const enemySpeed = () => Math.random() * 6 + 1;
-const enemyColor = () => {
-    let avl = ['images/enemy-bug.png', 'images/enemy-bug-2.png', 'images/enemy-bug-3.png']
-    return avl[Math.floor(Math.random() * 3)];
-}
 
 class Enemy {
     constructor() {
-        this.sprite = enemyColor();
-        this.speed = enemySpeed();
+        this.sprite = this.enemyColor();
+        this.speed = this.enemySpeed();
         this.x = -150;
+    }
+    
+    enemySpeed() {return Math.random() * 6 + 1}
+    enemyColor() {
+        let avl = ['images/enemy-bug.png', 'images/enemy-bug-2.png', 'images/enemy-bug-3.png']
+        return avl[Math.floor(Math.random() * 3)];
     }
 
     update(dt) {
