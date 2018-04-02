@@ -9,7 +9,7 @@ This is a fun arcade game built using HTML, CSS and JavaScript
 
 *To load it in your computer:*
 
-* Simply go to the [Beetles Game site](https://reinaldooo.github.io/Beetles-Game/)
+* Simply go to the [Beetles Game site](https://reinaldooo.github.io/BeetlesGame/)
 * Choose your ``character`` and a ``level`` depending on your skills
 * ``easy`` will give you three enemies, ``medium`` gives you six beetles, and ``hard`` nine of them
 * Your goal is to get safely to the water. Use the arrow keys in your keyboard to control the character
