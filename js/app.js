@@ -7,8 +7,7 @@ let char = undefined,
     enemyY = [],
     gemXs = [-2,99,200,301,402],
     gemYs = [52,134,216],
-    won = false,
-    score = 0;
+    won = false;
 
 const createEnemies = () => {
     allEnemies = [];
@@ -50,10 +49,10 @@ const reset = () => {
     allEnemies = [];
     char = undefined;
     charWinner = undefined;
-    score = 0;
+    player.score = 0;
     document.getElementById("char").style.display = "block";
     document.getElementById("char").className = "visible";
-    document.getElementById("score").innerHTML = score;
+    document.getElementById("score").innerHTML = player.score;
     gem.x = gem.gemRanX();
     gem.y = gem.gemRanY();
     won = false
@@ -78,8 +77,8 @@ class Gem {
 
     update() {
         if (player.x === gem.x && player.y === gem.y) {
-            score++;
-            document.getElementById("score").innerHTML = score;
+            player.score++;
+            document.getElementById("score").innerHTML = player.score;
             this.x = undefined;
             setTimeout(() => {
                 this.x = this.gemRanX();
@@ -126,6 +125,7 @@ class Player {
         this.sprite = char;
         this.x = 200;
         this.y = 380;
+        this.score = 0
     }
 
     update() {
@@ -137,9 +137,9 @@ class Player {
                     e.y === player.y && e.x > player.x && e.x < player.x + 70
                 ) {
                     //Set the original coordinates and puts on the looser char
-                    if (score > 0) {
-                        score--;
-                        document.getElementById("score").innerHTML = score;
+                    if (player.score > 0) {
+                        player.score--;
+                        document.getElementById("score").innerHTML = player.score;
                     };
                     this.sprite = charLooser;
                     this.x = 200;
@@ -162,8 +162,8 @@ class Player {
                 this.y -= 82;
                 this.sprite = charWinner;
                 won = true;
-                score++;
-                document.getElementById("score").innerHTML = score;
+                player.score++;
+                document.getElementById("score").innerHTML = player.score;
                 setTimeout(() => {
                     this.y = 380;
                     this.x = 200;
