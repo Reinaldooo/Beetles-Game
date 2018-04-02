@@ -89,10 +89,10 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
+        gem.update();
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        gem.update();
         player.update();
     }
 
@@ -181,7 +181,6 @@ var Engine = (function(global) {
         'images/char-pink-girl-deal.png',
         'images/char-pink-girl.png',
         'images/char-pink-girl-loo.png',
-        'images/empty.png',
         'images/char-boy-deal.png'
     ]);
     Resources.onReady(init);
