@@ -70,49 +70,54 @@ const reset = () => {
 //Gem Section
 
 class Gem {
-    constructor() {
-        this.sprite = Gem.gemColor();        
+  constructor() {
+      this.colors = ["images/Gem-Green.png","images/Gem-Blue.png","images/Gem-Orange.png"];
+      this.x = Gem.gemRanX();
+      this.y = Gem.gemRanY();
+      this.sprite = this.gemColor();
+  }
+  gemColor() {
+    //this function will randomize a color for the gem
+    //colors are sequential, blue>orange>green
+    let i = this.colors.splice(0, 1);
+    this.colors.push(i[0]);
+    return this.colors[0];
+  }
+  static gemRanX() {
+    //this function will randomize a x position for the gem
+    //this array represent all possible x positions for the gem.
+    const gemXs = [-2, 99, 200, 301, 402];
+    return gemXs[Math.floor(Math.random() * gemXs.length)];
+  }
+  static gemRanY() {
+    //this function will randomize a y position for the gem
+    //this array represent all possible y positions for the gem.
+    const gemYs = [52, 134, 216];
+    return gemYs[Math.floor(Math.random() * gemYs.length)];
+  }
+
+  render(_player) {
+    //the gem will only render if the player sprite is set, and its x location its not null
+    _player.renderGem &&
+      this.x !== null &&
+      ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  }
+
+  update(_player) {
+    //this func will receive the player as the argument, and check for collision.
+    if (_player.x === this.x && _player.y === this.y) {
+      //in case of collision, the gem will disappear as its x will be set to null
+      //then the score will be updated and 3 seconds later a new gem will be generated
+      _player.score++;
+      document.getElementById("score").innerHTML = _player.score;
+      this.x = null;
+      setTimeout(() => {
         this.x = Gem.gemRanX();
-        this.y = Gem.gemRanY();        
+        this.y = Gem.gemRanY();
+        this.sprite = this.gemColor();
+      }, 3000);
     }
-    //this functions will randomize a position for the gem
-    static gemColor() {
-        //these arrays represent all possible positions for the gem.
-        const colors = ['images/Gem-Green.png','images/Gem-Blue.png','images/Gem-Orange.png'];
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
-    static gemRanX() {
-        //these arrays represent all possible positions for the gem.
-        const gemXs = [-2, 99, 200, 301, 402];
-        return gemXs[Math.floor(Math.random() * gemXs.length)];
-    }
-    static gemRanY() {
-        //these arrays represent all possible positions for the gem.
-        const gemYs = [52, 134, 216];
-        return gemYs[Math.floor(Math.random() * gemYs.length)];
-    }
-
-    render(_player) {
-        //the gem will only render if the player sprite is set, and its x location its not null
-        (_player.renderGem && this.x !== null) &&
-            ctx.drawImage(Resources.get(this.sprite), this.x, this.y);        
-    }
-
-    update(_player) {
-        //this func will receive the player as the argument, and check for collision.
-        if (_player.x === this.x && _player.y === this.y) {
-            //in case of collision, the gem will disappear as its x will be set to null
-            //then the score will be updated and 3 seconds later a new gem will be generated
-            _player.score++;
-            document.getElementById("score").innerHTML = _player.score;
-            this.x = null;
-            setTimeout(() => {
-                this.x = Gem.gemRanX();
-                this.y = Gem.gemRanY();
-                this.sprite = Gem.gemColor();  
-            }, 3000);
-        }
-    }
+  }
 }
 
 
