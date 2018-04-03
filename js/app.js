@@ -4,20 +4,20 @@ let enemiesCount = [],
 const createEnemies = () => {
     //this func will create enemies based on difficulty and push it to the allEnemies array.
     allEnemies = [];
-    enemiesCount.forEach((e) => {
+    enemiesCount.forEach((_enemy) => {
         let enemy = new Enemy();
-        enemy.y = e;
-        allEnemies.push(enemy);    
+        enemy.y = _enemy;
+        allEnemies.push(enemy);
     });
 };
 
-const level = (e) => {
+const level = (level) => {
     //this is the level selection func. It will create enemies based on the enemiesCount array.
     //the values on the array are the coordinates on the canvas.
-    if(e === "easy") {
+    if(level === "easy") {
         enemiesCount = [52,134,216];
         createEnemies();
-    } else if(e === "medium") {
+    } else if(level === "medium") {
         enemiesCount = [52,134,216,52,134,216];
         createEnemies();
     } else {
@@ -35,6 +35,9 @@ const charSelection = (c) => {
         player.charLooser = 'images/char-boy-loo.png';
         document.getElementById("1").style.opacity = .2;
         document.getElementById("2").style.opacity = 1;
+        setTimeout(() => {
+            player.renderGem = true;
+        }, 1500);
     } else {
         player.sprite = 'images/char-pink-girl.png';
         player.char = 'images/char-pink-girl.png';
@@ -42,6 +45,9 @@ const charSelection = (c) => {
         player.charLooser = 'images/char-pink-girl-loo.png';
         document.getElementById("2").style.opacity = .2;
         document.getElementById("1").style.opacity = 1;
+        setTimeout(() => {
+            player.renderGem = true;
+        }, 1500);
     }
 };
 
@@ -52,12 +58,13 @@ const reset = () => {
     player.char = undefined;
     player.charWinner = undefined;
     player.score = 0;
+    player.won = false;
+    player.renderGem = false;
     document.getElementById("score").innerHTML = player.score;
     document.getElementById("2").style.opacity = 1;
     document.getElementById("1").style.opacity = 1;
-    gem.x = gem.gemRanX();
-    gem.y = gem.gemRanY();
-    player.won = false;
+    gem.x = Gem.gemRanX();
+    gem.y = Gem.gemRanY();
 };
 
 //Gem Section
@@ -65,60 +72,66 @@ const reset = () => {
 
 class Gem {
     constructor() {
-        this.sprite = 'images/Gem-Green.png';
-        //these arrays represent all posible positions for the gem.
-        this.gemXs = [-2,99,200,301,402];
-        this.gemYs = [52,134,216];
-        this.x = this.gemRanX();
-        this.y = this.gemRanY();        
+        this.sprite = 'images/Gem-Green.png';        
+        this.x = Gem.gemRanX();
+        this.y = Gem.gemRanY();        
     }
     //this functions will randomize a position for the gem
-    gemRanX() { return this.gemXs[Math.floor(Math.random() * 5)]; }
-    gemRanY() { return this.gemYs[Math.floor(Math.random() * 3)]; }
+    static gemRanX() {
+        //these arrays represent all possible positions for the gem.
+        const gemXs = [-2, 99, 200, 301, 402];
+        return gemXs[Math.floor(Math.random() * 5)];
+    }
+    static gemRanY() {
+        //these arrays represent all possible positions for the gem.
+        const gemYs = [52, 134, 216];
+        return gemYs[Math.floor(Math.random() * 3)];
+    }
 
-    render(p) {
+    render(_player) {
         //the gem will only render if the player sprite is set, and its x location its not null
-        (p.char !== undefined && this.x !== null) &&
+        (_player.renderGem && this.x !== null) &&
             ctx.drawImage(Resources.get(this.sprite), this.x, this.y);        
     }
 
-    update(p) {
+    update(_player) {
         //this func will receive the player as the argument, and check for collision.
-        if (p.x === this.x && p.y === this.y) {
+        if (_player.x === this.x && _player.y === this.y) {
             //in case of collision, the gem will disappear as its x will be set to null
             //then the score will be updated and 3 seconds later a new gem will be generated
-            p.score++;
-            document.getElementById("score").innerHTML = p.score;
+            _player.score++;
+            document.getElementById("score").innerHTML = _player.score;
             this.x = null;
             setTimeout(() => {
-                this.x = this.gemRanX();
-                this.y = this.gemRanY();
+                this.x = Gem.gemRanX();
+                this.y = Gem.gemRanY();
             }, 3000);
         }
     }
 }
 
+
 //Enemy Section
 
 class Enemy {
     constructor() {
-        this.sprite = this.enemyColor();
-        this.speed = this.enemySpeed();
+        this.sprite = Enemy.enemyColor();
+        this.speed = Enemy.enemySpeed();
         this.x = -150;
     }
     
-    enemySpeed() {return Math.random() * 6 + 1;}
-    enemyColor() {
+    static enemySpeed() {return Math.random() * 6 + 1;}
+    static enemyColor() {
         //this func will randomize the color of the enemies
         let avl = ['images/enemy-bug.png', 'images/enemy-bug-2.png', 'images/enemy-bug-3.png'];
         return avl[Math.floor(Math.random() * 3)];
     }
 
-    update(dt, p) {
+    update(dt, _player) {
         //this method receives the player as argument, and if the player wins, it will freeze the enemies on the canvas start
-        if (this.x < 501 && !p.won) {
+        if (this.x < 501 && !_player.won) {
             this.x += dt + this.speed;
-        } else if(p.won) {
+        } else if(_player.won) {
             this.x = -2;
         } else {
             this.x = -150;
@@ -141,13 +154,14 @@ class Player {
         this.x = 200;
         this.y = 380;
         this.score = 0;
+        this.renderGem = false;
     }
 
-    update(all) {
+    update(_allEnemies) {
         this.char !== undefined &&
         //this method will check for collisions between the player and the enemies.
         //the allEnemies array is received as the argument for this method.
-            all.forEach((e) => {
+            _allEnemies.forEach((e) => {
                 if ( //Enemys and player Ys are prefixed numbers.
                     e.y === this.y && e.x < this.x && e.x > this.x - 70
                     ||
@@ -158,26 +172,26 @@ class Player {
                     if (this.score > 0) {
                         this.score--;
                         document.getElementById("score").innerHTML = this.score;
-                    };
+                    }
                     this.sprite = this.charLooser;
                     this.x = 200;
                     this.y = 380;
                 }
             });
-    };
+    }
 
     render() {
         this.char !== undefined && ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
         //the player only gets rendered after the char selection
-    };
+    }
 
-    handleInput(e, enemies) {
+    handleInput(e, _allEnemies) {
         if (e === "down") {
             if (this.y < 379 && this.y > 51) {
                 //handles the "down" key. The "if" guarantees that the player will not fall of the canvas.
                 this.y += 82;
             }
-        } else if (e === "up" && enemies.length > 0) {
+        } else if (e === "up" && _allEnemies.length > 0) {
             if (this.y === 52) {
                 // handles the "up" key. after the 52 position its win position, so the
                 // sprite gets updated, aswell as the won status and the score.
