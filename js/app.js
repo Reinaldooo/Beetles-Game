@@ -161,11 +161,11 @@ class Player {
         this.char !== undefined &&
         //this method will check for collisions between the player and the enemies.
         //the allEnemies array is received as the argument for this method.
-            _allEnemies.forEach((e) => {
+            _allEnemies.forEach((_enemy) => {
                 if ( //Enemys and player Ys are prefixed numbers.
-                    e.y === this.y && e.x < this.x && e.x > this.x - 70
+                    _enemy.y === this.y && _enemy.x < this.x && _enemy.x > this.x - 70
                     ||
-                    e.y === this.y && e.x > this.x && e.x < this.x + 70
+                    _enemy.y === this.y && _enemy.x > this.x && _enemy.x < this.x + 70
                 ) {
                     //Sets the original coordinates and puts on the looser char
                     //also, updates the score
