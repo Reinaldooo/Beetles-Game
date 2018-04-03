@@ -69,23 +69,27 @@ const reset = () => {
 
 //Gem Section
 
-
 class Gem {
     constructor() {
-        this.sprite = 'images/Gem-Green.png';        
+        this.sprite = Gem.gemColor();        
         this.x = Gem.gemRanX();
         this.y = Gem.gemRanY();        
     }
     //this functions will randomize a position for the gem
+    static gemColor() {
+        //these arrays represent all possible positions for the gem.
+        const colors = ['images/Gem-Green.png','images/Gem-Blue.png','images/Gem-Orange.png'];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
     static gemRanX() {
         //these arrays represent all possible positions for the gem.
         const gemXs = [-2, 99, 200, 301, 402];
-        return gemXs[Math.floor(Math.random() * 5)];
+        return gemXs[Math.floor(Math.random() * gemXs.length)];
     }
     static gemRanY() {
         //these arrays represent all possible positions for the gem.
         const gemYs = [52, 134, 216];
-        return gemYs[Math.floor(Math.random() * 3)];
+        return gemYs[Math.floor(Math.random() * gemYs.length)];
     }
 
     render(_player) {
@@ -105,6 +109,7 @@ class Gem {
             setTimeout(() => {
                 this.x = Gem.gemRanX();
                 this.y = Gem.gemRanY();
+                this.sprite = Gem.gemColor();  
             }, 3000);
         }
     }
